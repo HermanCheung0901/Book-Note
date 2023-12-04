@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Notes</title>
+    <!-- local css -->
+    <link rel="stylesheet" href="/styles/main.css" />
+    <!-- bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- font awesome -->
+    <script
+      src="https://kit.fontawesome.com/420f8fd081.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- jQuery -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <style>
+      body {
+        background-color: #f3eeea;
+        padding-top: 30px;
+        padding-bottom: 80px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container-md">
+      <div class="center">
+        <div class="header">
+          <h1 class="title"><a href="/">My Book Notes</a></h1>
+          <p id="summary">
+            BookNotes is your go-to website for tracking and taking notes on the
+            books you read. With a user-friendly interface, it's never been
+            easier to organize your book collection and capture your thoughts.
+            <br />
+            <br />
+            Simply enter the Open Library ID (OLID) of a book, and BookNotes
+            will automatically fetch the book cover for you. No more hassle of
+            searching and uploading covers manually. Once added, you can start
+            creating personalized notes, jotting down quotes, and highlighting
+            key takeaways.
+          </p>
+
+          <div id="sorting">
+            <form action="/sort" method="post" id="sortingForm">
+              <label for="order_select">Sort by</label>
+              <select
+                name="order"
+                id="order_select"
+                onchange="this.form.submit()"
+              >
+                <option value="date_descend">Latest Read</option>
+                <option value="date_ascend">Earliest Read</option>
+                <option value="rate_descend">Top Rate</option>
+                <option value="rate_ascend">Lowest Rate</option>
+                <option value="char_ascend">Title (A to Z)</option>
+                <option value="char_descend">Title (Z to A)</option>
+              </select>
+            </form>
+          </div>
+        </div>
+        <div id="books">
+          <% if (books.length == 0) { %>
+          <hr />
+          <div class="empty-box">
+            <button class="addNewBtn withoutBooks">
+              <a href="/new"
+                ><i class="fa-solid fa-plus" style="color: #ffffff"></i> Add
+                Book</a
+              >
+            </button>
+          </div>
+          <% } else { %>
+          <a href="/new" class="addNewBtn withBooks"
+            ><i class="fa-solid fa-plus" style="color: #ffffff"></i> Add Book</a
+          >
+          <% books.forEach(book => { %>
+          <hr />
+          <div class="book" id="book<%= book.book_id %>">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="left-col">
+                  <div class="book_cover">
+                    <img src="<%= book.coverURL %>" alt="" />
+                  </div>
+                  <div class="book_rating">
+                    <h6 class="subTitle">Rating :</h6>
+                    <div class="stars">
+                      <% for (let i = 0; i < book.rating; i++) {%>
+                      <i class="fa-solid fa-star" style="color: #ffc700"></i>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="right-col">
+                  <h4 class="book_title"><%= book.title %></h4>
+                  <p class="book_review"><%= book.review %></p>
+                  <div class="detailBtn">
+                    <a href="/detail/<%= book.book_id %>" class="to_detail"
+                      >Read my notes</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% }); %> <% } %>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

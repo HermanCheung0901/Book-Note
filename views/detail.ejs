@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= book[0].title%></title>
+    <!-- bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <!-- local css -->
+    <link rel="stylesheet" href="/styles/detail.css" />
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- font awesome -->
+    <script
+      src="https://kit.fontawesome.com/420f8fd081.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- jquery -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <style>
+      body {
+        background-color: #f3eeea;
+        padding-top: 30px;
+        padding-bottom: 80px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container-md">
+      <div class="center">
+        <div class="header">
+          <h1 class="title"><a href="/">My Book Notes</a></h1>
+        </div>
+
+        <div class="edit-boxes">
+          <form
+            action="/edit/<%= book[0].book_id %>"
+            method="post"
+            id="edit-form"
+          >
+            <div id="details">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="book_cover_container">
+                    <div class="book_cover">
+                      <img src="<%= book[0].coverURL %>" alt="" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="book_detail">
+                    <div class="book_title">
+                      <p class="subTitle"><%= book[0].title%></p>
+                    </div>
+                    <div class="olid">
+                      <p class="subTitle">OLID : <%= book[0].olid %></p>
+                    </div>
+                    <div class="date_read">
+                      <p class="subTitle">
+                        Date Read :
+                        <span class="show"
+                          ><%= book[0].date_read.toISOString().split('T')[0];
+                          %></span
+                        >
+                        <input
+                          type="date"
+                          name="updatedDate_read"
+                          value="<%= book[0].date_read.toISOString().split('T')[0]; %>"
+                          id="updatedDate_read"
+                          class="hidden"
+                          hidden="true"
+                        />
+                      </p>
+                    </div>
+                    <div class="book_rating">
+                      <p class="subTitle">Rating :</p>
+                      <div class="stars show" id="currentRate">
+                        <% for (let i = 0; i < book[0].rating; i++) {%>
+                        <i class="fa-solid fa-star" style="color: #ffc700"></i>
+                        <% } %>
+                      </div>
+                      <div id="updateRating" class="hidden" hidden="true">
+                        <div class="stars">
+                          <% for (let i = 0; i < 5; i++) {%> <% if (5-i ==
+                          book[0].rating) { %>
+                          <input
+                            type="radio"
+                            id="star<%= 5-i %>"
+                            name="updatedRating"
+                            value="<%= 5-i %>"
+                            checked
+                          />
+                          <label for="star<%= 5-i %>" title="<%= 5-i %>"
+                            ><i class="fa-solid fa-star" style="color: #ccc"></i
+                          ></label>
+                          <% } else {%>
+                          <input
+                            type="radio"
+                            id="star<%= 5-i %>"
+                            name="updatedRating"
+                            value="<%= 5-i %>"
+                          />
+                          <label for="star<%= 5-i %>" title="<%= 5-i %>"
+                            ><i class="fa-solid fa-star" style="color: #ccc"></i
+                          ></label>
+                          <% } %> <% } %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="review">
+              <p class="subTitle">Review :</p>
+              <p class="show content"><%= book[0].review %></p>
+              <textarea
+                name="updatedReview"
+                id="updatedReview"
+                cols="100"
+                rows="10"
+                class="hidden auto-height"
+                hidden="true"
+              >
+<%= book[0].review %></textarea
+              >
+            </div>
+
+            <hr />
+
+            <div class="notes">
+              <p class="subTitle">Notes :</p>
+              <% if (notes.length != 0) { %> <% notes.forEach((note, index) => {
+              %>
+              <div class="note">
+                <label class="subTitle" for="updatedNote<%= index+1 %>"
+                  ><%= index+1 %>.</label
+                >
+                <p class="show content"><%= note.note %></p>
+                <textarea
+                  class="hidden auto-height"
+                  name="updatedNote"
+                  id="updatedNote<%= index+1 %>"
+                  cols="100"
+                  rows="3"
+                  hidden="true"
+                >
+<%= note.note %></textarea
+                >
+              </div>
+              <% }); %> <% } else {%>
+              <p class="withoutNote show">No note..</p>
+              <% } %>
+            </div>
+
+            <button type="button" class="addNoteBtn hidden" hidden="true">
+              <% if (notes.length != 0) { %> more notes <% } else { %> add note
+              <% } %>
+            </button>
+            <button class="hidden" id="submitBtn" type="submit" hidden="true">
+              <i class="fa-solid fa-check" style="color: #ffffff"></i>
+              Save
+            </button>
+
+            <div class="button-group hidden" hidden="true">
+              <div class="delete">
+                <form action="/delete/<%= book[0].book_id %>" method="post">
+                  <button id="deleteBtn" type="submit">
+                    <i class="fa-solid fa-trash-can" style="color: #ffffff"></i>
+                    delete
+                  </button>
+                </form>
+              </div>
+
+              <div class="cancel">
+                <form
+                  action="/cancel/<%= book[0].book_id %>"
+                  id="cancel-form"
+                  method="post"
+                >
+                  <button id="cancelBtn" type="submit">
+                    <i class="fa-solid fa-xmark" style="color: #ffffff"></i>
+                    Cancel
+                  </button>
+                </form>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <button id="editBtn" class="show" onclick="showInput()">
+          <i class="fa-solid fa-pen-to-square" style="color: #ffffff"></i>
+          Edit Note
+        </button>
+      </div>
+    </main>
+    <script>
+      function showInput() {
+        $(".hidden").removeAttr("hidden");
+        $(".show").attr("hidden", "true");
+      }
+
+      function display() {
+        $(".show").removeAttr("hidden");
+        $(".hidden").attr("hidden", "true");
+      }
+
+      let current_note = $(".notes .content").length;
+      $(".addNoteBtn").click(function () {
+        current_note++;
+        let notebox = `<label class="subTitle" for="newNote${current_note}">${current_note}.</label><br /><textarea name="newNote" class="newNote hidden" id="newNote${current_note}" cols="100" rows="3"></textarea>`;
+        $(".notes").append(notebox);
+      });
+
+      $(".auto-height").on("input", function () {
+        this.style.height = "auto";
+        this.style.height = $(this).get(0).scrollHeight + "px";
+      });
+
+      let currentRate = <%= book[0].rating %>;
+      let stars = $('.stars label');
+      for (i = 5; i>=currentRate; i--) {
+        stars[i-1].attr('checked', true)
+      }
+    </script>
+  </body>
+</html>
